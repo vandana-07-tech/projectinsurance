@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Requirement Sheet — AI Powered Insurance-claim-fraud-testing-accelerator</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Hackathon demo</p>
+      <h1>Realtime Requirement Sheet</h1>
+      <p class="subtitle">Up to 6 life-insurance requirements. Open any row to run the full agent pipeline.</p>
+    </div>
+    <div class="top-actions">
+      <a class="btn primary" href="/">Open agent pipeline</a>
+      <button type="button" class="btn ghost" id="btnRefresh">Refresh status</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="row" style="justify-content: space-between;">
+        <h2 style="margin:0;">Requirements (max 6)</h2>
+        <span class="badge" id="liveBadge">live</span>
+      </div>
+      <p class="muted" id="sheetMeta">Loading…</p>
+      <div id="sheetTable" class="table-wrap"></div>
+    </section>
+
+    <section class="panel">
+      <h2>How to demo</h2>
+      <ol>
+        <li>Pick a requirement → <strong>Run E2E</strong> opens the agent pipeline with that text preloaded.</li>
+        <li>Walk: Requirement → Fraud Scenario → Test Data → API Test (Newman) → Fraud Analysis → Results.</li>
+        <li>Unselect a business rule to auto-unselect dependent scenarios; add suggested rules before generating scenarios.</li>
+        <li>Status chips on this sheet update from local demo runs (realtime in this browser).</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Separate link: <code>/requirements-sheet.html</code></span>
+  </footer>
+  <script src="/requirements-sheet.js"></script>
+</body>
+</html>

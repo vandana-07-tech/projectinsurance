@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Powered Insurance-claim-fraud-testing-accelerator</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Agent pipeline</p>
+      <h1>AI Powered Insurance-claim-fraud-testing-accelerator</h1>
+      <p class="subtitle">Requirement → Fraud Scenario → Test Data → API Test (Newman) → Fraud Analysis → Results</p>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost" href="/requirements-sheet.html">Requirement sheet</a>
+      <label class="toggle">
+        <input type="checkbox" id="defectToggle" />
+        Intentional defect mode
+      </label>
+      <button id="btnRestart" class="btn ghost" type="button">Start over</button>
+    </div>
+  </header>
+
+  <nav class="steps" id="stepNav" aria-label="Agent workflow steps">
+    <button type="button" class="step active" data-step="1">1. Requirement Agent</button>
+    <button type="button" class="step" data-step="2" disabled>2. Fraud Scenario Agent</button>
+    <button type="button" class="step" data-step="3" disabled>3. Test Data Agent</button>
+    <button type="button" class="step" data-step="4" disabled>4. API Test Agent</button>
+    <button type="button" class="step" data-step="5" disabled>5. Fraud Analysis Agent</button>
+    <button type="button" class="step" data-step="6" disabled>6. Results</button>
+  </nav>
+
+  <main class="layout">
+    <p id="statusMsg" class="status" role="status"></p>
+
+    <!-- 1. Requirement Agent -->
+    <section class="panel step-panel" id="panel-1">
+      <h2>1. Requirement Agent</h2>
+      <p class="muted">Enter a life insurance requirement. The agent extracts business rules and dependencies.</p>
+      <form id="analyzeForm" class="stack">
+        <label>Requirement
+          <textarea id="requirementText" name="requirementText" rows="8" required>As a beneficiary, I should be able to submit a life insurance death claim against an active life policy. The system should accept the claim only when the policy is active, the date of death falls within the policy period, the claim amount does not exceed the policy sum assured, and duplicate claims for the same death event are rejected.</textarea>
+        </label>
+        <div class="actions">
+          <button type="submit" class="btn primary" id="btnAnalyze">Run Requirement Agent</button>
+        </div>
+      </form>
+
+      <div id="requirementOutput" class="hidden">
+        <p id="catalogBadge" class="muted"></p>
+        <h3>Extracted business rules</h3>
+        <p class="muted">Unselect a rule to auto-unselect dependent scenarios (after scenarios are generated).</p>
+        <div class="dep-grid">
+          <div>
+            <div id="rulesInteractive"></div>
+            <h3>Suggested business rules</h3>
+            <p class="muted">Click <strong>Add</strong> to promote a suggestion into the active rule set.</p>
+            <div id="suggestedRules"></div>
+          </div>
+          <div>
+            <h3>Dependency map</h3>
+            <div id="dependencyMap" class="dep-map"></div>
+            <h3>Required fields</h3>
+            <div id="fieldsList"></div>
+            <h3>Open questions</h3>
+            <ul id="questionsList"></ul>
+            <h3>Assumptions</h3>
+            <ul id="assumptionsList"></ul>
+          </div>
+        </div>
+        <div class="actions sticky-actions">
+          <button type="button" class="btn" id="btnSelectAllRules">Select all rules</button>
+          <button type="button" class="btn primary" id="btnToScenarios">Continue → Fraud Scenario Agent</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Fraud Scenario Agent -->
+    <section class="panel step-panel hidden" id="panel-2">
+      <h2>2. Fraud Scenario Agent</h2>
+      <p class="muted">Select approved rules, then generate suspicious / validation test scenarios.</p>
+      <div id="coverageChips" class="chips"></div>
+      <div id="scenariosInteractive"></div>
+      <div class="actions sticky-actions">
+        <button type="button" class="btn ghost" id="btnBack1">Back</button>
+        <button type="button" class="btn" id="btnSelectAllScenarios">Select all scenarios</button>
+        <button type="button" class="btn primary" id="btnToTestData">Continue → Test Data Agent</button>
+      </div>
+    </section>
+
+    <!-- 3. Test Data Agent -->
+    <section class="panel step-panel hidden" id="panel-3">
+      <h2>3. Test Data Agent</h2>
+      <p class="muted">Synthetic life-claim fixtures linked to each selected scenario.</p>
+      <div id="fixturesView" class="table-wrap muted">Fixtures will appear after generation.</div>
+      <div class="actions sticky-actions">
+        <button type="button" class="btn ghost" id="btnBack2">Back</button>
+        <button type="button" class="btn primary" id="btnGenFixtures">Run Test Data Agent</button>
+        <button type="button" class="btn primary hidden" id="btnToApiTest">Continue → API Test Agent</button>
+      </div>
+    </section>
+
+    <!-- 4. API Test Agent -->
+    <section class="panel step-panel hidden" id="panel-4">
+      <h2>4. API Test Agent (Using Newman)</h2>
+      <p class="muted">Builds a Postman Collection v2.1 and executes it with Newman against the mock API.</p>
+      <div id="collectionView" class="muted">Collection not generated yet.</div>
+      <div id="runResults" class="table-wrap"></div>
+      <div class="actions sticky-actions">
+        <button type="button" class="btn ghost" id="btnBack3">Back</button>
+        <button type="button" class="btn primary" id="btnRunNewman">Generate collection &amp; run Newman</button>
+        <button type="button" class="btn primary hidden" id="btnToAnalysis">Continue → Fraud Analysis Agent</button>
+      </div>
+    </section>
+
+    <!-- 5. Fraud Analysis Agent -->
+    <section class="panel step-panel hidden" id="panel-5">
+      <h2>5. Fraud Analysis Agent</h2>
+      <p class="notice">Findings are potential software validation defects — not real-world fraud verdicts.</p>
+      <div id="findingsView" class="muted">No findings yet.</div>
+      <div class="actions sticky-actions">
+        <button type="button" class="btn ghost" id="btnBack4">Back</button>
+        <button type="button" class="btn primary" id="btnToResults">Continue → Results</button>
+      </div>
+    </section>
+
+    <!-- 6. Results -->
+    <section class="panel step-panel hidden" id="panel-6">
+      <h2>6. Results</h2>
+      <div id="runSummary" class="stats"></div>
+      <div id="finalResults" class="table-wrap"></div>
+      <div id="finalFindings"></div>
+      <div class="actions sticky-actions">
+        <a id="reportJson" class="btn ghost" href="#" target="_blank">JSON report</a>
+        <a id="reportHtml" class="btn ghost" href="#" target="_blank">HTML report</a>
+        <a id="exportCollection" class="btn ghost" href="#" target="_blank">Export collection</a>
+        <button type="button" class="btn primary" id="btnNewAnalysis">Start over</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="configLine">Mock life API · Newman · Postman v2.1</span>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>
